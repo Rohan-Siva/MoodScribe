@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodScribe - Welcome</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <style>
+       /* Cyberpunk-style styling */
+       @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+/* Basic Reset and Body Style */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffe1;
+    background-color: #1a1a2e;
+}
+
+/* Video Background */
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.7; /* Adjust transparency */
+}
+
+/* Welcome Container */
+.welcome-container {
+    width: 500px;
+    padding: 30px;
+    background: rgba(26, 26, 46, 0.85);
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px #00ffe1, 0px 0px 60px #ff00e6;
+    text-align: center;
+    color: #00ffe1;
+    backdrop-filter: blur(10px);
+}
+
+/* Title Styling */
+.welcome-container h1 {
+    font-size: 24px;
+    color: #ff00e6;
+    margin-bottom: 15px;
+    text-shadow: 0px 0px 8px #00ffe1, 0px 0px 12px #ff00e6;
+}
+
+/* Section Headers */
+.section h2 {
+    font-size: 18px;
+    color: #ff00e6;
+    margin-bottom: 10px;
+    text-shadow: 0px 0px 6px #00ffe1;
+}
+
+.section p, .section li {
+    font-size: 14px;
+    color: #00ffe1;
+    line-height: 1.6;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Button Styling */
+.button-container button {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #1a1a2e;
+    background-color: #ff00e6;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-shadow: 0px 0px 5px #00ffe1;
+    transition: transform 0.2s, background-color 0.3s;
+    margin: 0 5px;
+}
+
+.button-container button:hover {
+    background-color: #ff66e6;
+    transform: scale(1.05);
+}
+
+.button-container button:active {
+    background-color: #ff00e6;
+    transform: scale(0.95);
+}
+
+/* Additional Styling for Features, Tips, and Progress */
+.feature-list, .tip, .progress-snapshot {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(26, 26, 46, 0.7);
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #00ffe1, 0px 0px 20px #ff00e6;
+}
+</style>
+</head>
+<body>
+    <!-- Background Video -->
+    <video autoplay muted loop id="background-video">
+        <source src="rog.mp4"video/mp4">
+    </video>
+
+
+    <div class="welcome-container">
+        <h1>Welcome to MoodScribe!</h1>
+        <p>Your real-time social sidekick, here to help you ace every conversation.</p>
+
+        <!-- Feature Highlights -->
+        <div class="section">
+            <h2>🏆 Features at a Glance</h2>
+            <ul>
+                <li>Real-Time Topic Suggestions: Never run out of things to say.</li>
+                <li>Tone Matching: Keep conversations positive or empathetic.</li>
+                <li>Memory Recall: Build rapport with saved details.</li>
+            </ul>
+        </div>
+
+        <!-- Quick Start Guide -->
+        <div class="section">
+            <h2>🚀 Quick Start Guide</h2>
+            <p>1. Open MoodScribe and connect to Instagram DMs.</p>
+            <p>2. Start a conversation, and SocialHack will suggest topics and responses.</p>
+            <p>3. Check the Memory Recall tab for follow-up tips!</p> <!---Use local storage to store how the conversations are flowing and use that -->
+        </div>
+
+        <!-- Interactive Demo Button -->
+        <div class="button-container">
+            <button onclick="showDemo()">Start Conversation</button>
+            
+        </div>
+
+        <!-- Social Goals and Progress Snapshot -->
+        <div class="section">
+            <h2>📊 Your Progress Snapshot</h2>
+            <p>Engagement Score: <span style="color: #00ff00">85%</span></p>
+            <p>Goal: Ask more open-ended questions</p>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="section">
+            <h2>💬 Tips of the Day</h2>
+            <p>Try using someone's name in conversation to make a stronger connection!</p>
+        </div>
+    </div>
+
+    <script>
+        function showDemo() {
+            window.location.href = "login.html";
+        }
+
+        function goToSettings() {
+            alert("Settings page not implemented yet!");
+        }
+    </script>
+</body>
+</html>

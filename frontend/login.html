@@ -136,10 +136,41 @@
         .suggested-thread:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+
+        .content-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Centered Login Container */
+.login-container {
+    width: 350px;
+    padding: 30px;
+    background: rgba(26, 26, 46, 0.85);
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px #00ffe1, 0px 0px 60px #ff00e6;
+    text-align: center;
+    color: #00ffe1;
+    backdrop-filter: blur(10px);
+    z-index: 1; /* Ensures it appears on top of the image */
+}
+
+/* Image positioned to the left */
+.login-image {
+    position: absolute;
+    left: -75%; /* Adjust as needed for positioning */
+    max-width: 150px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px #00ffe1, 0px 0px 60px #ff00e6;
+}
     </style>
 </head>
 <body>
-
+    <div class="content-wrapper">
+        <img src="HackTX.png" alt="Cyberpunk Aesthetic" class="login-image">
     <!-- Login Form Container -->
     <div class="login-container">
         <h2>MoodScribe</h2>
@@ -161,6 +192,8 @@
             <div class="suggested-thread" onclick="selectThread('thread202')">thread202</div>
         </div>
     </div>
+    
+</div>
 
     <script>
         // JavaScript function to handle login

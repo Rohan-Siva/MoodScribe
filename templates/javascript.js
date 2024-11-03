@@ -177,7 +177,7 @@ function generateResponse() {
         suggestedMessage: "Take it one day at a time. I'm here for you.",
         mood: "sad",
         suggestedMood: "empathetic",
-        engagement: 2
+        engagement: 10
     };
     
     handleAIResults(aiResult);
@@ -185,10 +185,19 @@ function generateResponse() {
 
 // Example usage with predefined conversation
 const scrapedConversation = [
-    "[2024-11-02T12:00:00Z] [user1]: 'I'm feeling really down today.'",
-    "[2024-11-02T12:01:00Z] [user2]: 'Oh no, what happened?'",
-    "[2024-11-02T12:02:00Z] [user1]: 'I've just been going through a tough time.'",
-    "[2024-11-02T12:03:00Z] [user2]: 'That sounds rough, do you want to talk about it?'",
+    "[2024-11-02T12:00:00Z] [user1]: 'Hello'",
+    "[2024-11-02T12:00:00Z] [user2]: 'Hey, how have you been'",
+    "[2024-11-02T12:00:00Z] [user1]: 'I'm doing well, how about you?'",
+    "[2024-11-02T12:00:00Z] [user2]: 'I'm feeling really down today.'",
+    "[2024-11-02T12:01:00Z] [user1]: 'Oh no, what happened?'",
+    "[2024-11-02T12:02:00Z] [user2]: 'I've just been going through a tough time.'",
+    "[2024-11-02T12:03:00Z] [user1]: 'That sounds rough, do you want to talk about it?'", 
+    "[2024-11-02T12:04:00Z] [user2]: 'I don't know, it's just everything piling up.'", 
+    "[2024-11-02T12:05:00Z] [user1]: 'I'm here for you, anytime.'",
+    "[2024-11-02T12:06:00Z] [user2]: 'Thank you, it helps to know someone cares.'",
+    "[2024-11-02T12:07:00Z] [user1]: 'You're not alone in this.'",
+    "[2024-11-02T12:08:00Z] [user2]: 'It just feels so overwhelming at times.'",
+    
 ];
 
 scrapedConversation.forEach(line => processConversationLine(line));

@@ -28,7 +28,7 @@ headers = {
 	'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 105.0.0.11.118 (iPhone11,8; iOS 12_3_1; en_US; en-US; scale=2.00; 828x1792; 165586599)'
 }
 
-SESSIONID = "70389442364%3AUlNmHq9miaBTB5%3A15%3AAYf0E7qFW4OQaaPGr1jtmTxwutlbl7hH8OQWAh7ioQ"
+SESSIONID = "70389442364%3Ar3gk4SZexOW22V%3A15%3AAYfROopEMFKk1DGyF-Pyp4OPIgRyBFaHz5qdwnNcNg"
 THREADID = None
 VERBOSE = False
 FILE_PATH = "/Users/frankhou/Desktop/InstagramDMScraper-master/dataFile.txt"
@@ -490,15 +490,14 @@ def main():
             print(
                 f"Fetching ended! A total of {len(MESSAGES)} messages were fetched in {hours} {'hours' if hours != 1 else 'hour'}, {minutes} {'minutes' if minutes != 1 else 'minute'}, {seconds} {'seconds' if seconds != 1 else 'second'} with {REQUESTS_AMMOUNT} requests to the API and average of {'{:.2f}'.format(compute_average_rate())} messages/second")
 
-
-
+    # Open the file and read the input text
     with open('dataFile.txt', 'r') as file:
         input_text = file.read()
 
         # Regex pattern to parse the text
         pattern = r"(You|Frank): (.*?) \[(\d{2}/\d{2}/\d{4} @ \d{2}:\d{2}:\d{2})\]"
 
-        # Initialize an empty list to store messages
+        # Initialize an empty list to store formatted messages
         messages = []
 
         # Process each match found in the input text
@@ -506,20 +505,19 @@ def main():
             sender, text, timestamp_str = match.groups()
             timestamp = datetime.strptime(timestamp_str, "%d/%m/%Y @ %H:%M:%S").isoformat() + "Z"
             
-            # Add each message to the list in the JSON format
-            messages.append({
-                "sender": "user1" if sender == "You" else "user2",
-                "text": text,
-                "timestamp": timestamp
-            })
+            # Format each message in the specified format
+            formatted_message = f"[{timestamp}] [{'user1' if sender == 'You' else 'user2'}]: '{text}'"
+            messages.append(formatted_message)
 
         # Keep only the most recent 10 messages
         messages = messages[-10:]
 
-        # Creating the JSON structure
+        # Create the instruction string
+        instruction_text = "Conversation: " + " ".join(messages)
+
+        # Creating the JSON structure with a single instruction field
         json_data = {
-            "conversation_id": THREADID,
-            "messages": messages,
+            "instruction": instruction_text
         }
 
         # Output JSON data
@@ -529,7 +527,6 @@ def main():
         with open('conversation.json', 'w') as json_file:
             json_file.write(json_output)
 
-    print("JSON output with the 10 most recent messages saved to 'conversation.json'.")
-
+    print("JSON output in the specified format saved to 'conversation.json'.")
 if __name__ == '__main__':
     main()

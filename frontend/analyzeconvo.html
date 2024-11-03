@@ -104,7 +104,6 @@
             padding-top: 20px;
             padding-bottom: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.3);
-            height: 150px;
         }
 
         /* Circular Mood Score */
@@ -120,11 +119,26 @@
             margin-right: 20px;
         }
 
-        /* Larger emotion image inside the mood score */
         .mood-score img {
             width: 60px;
             height: 60px;
             border-radius: 50%;
+        }
+
+        /* Thought bubble */
+        .thought-bubble {
+            position: absolute;
+            bottom: 90px;
+            left: 100px;
+            max-width: 150px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #1a1a2e;
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+            display: none;
         }
 
         /* Locking the "Suggested Response" input box */
@@ -138,6 +152,29 @@
             border: 1px solid #00ffe1;
             pointer-events: none; /* Locks the text box */
         }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-buttons button {
+            padding: 5px 10px;
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+            color: #1a1a2e;
+            background-color: #00ffe1;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-buttons button:hover {
+            background-color: #ff00e6;
+        }
     </style>
 </head>
 <body>
@@ -145,7 +182,6 @@
     <div class="chat-log-container">
         <div class="contact-name" id="contactName">Contact Name</div>
         <div id="chatMessages">
-            <!-- Sample messages for testing -->
             <div class="message-container">
                 <img class="emotion-image" src="anxiety.gif" alt="Emotion">
                 <div class="message other">Hey! How's it going?</div>
@@ -161,8 +197,15 @@
         <div class="bottom-section">
             <div class="mood-score">
                 <img id="emotionImage" src="sadness.webp" alt="Progress Emotion">
+                <div class="thought-bubble" id="thoughtBubble">Maybe try saying something different</div>
             </div>
-            <input type="text" class="suggested-response" placeholder="Suggested Response...">
+            <input type="text" class="suggested-response" id="suggestedResponse" placeholder="Suggested Response...">
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="editResponse()">Edit</button>
+            <button onclick="copyResponse()">Copy</button>
+            <button onclick="generateResponse()">Generate</button>
         </div>
     </div>
 

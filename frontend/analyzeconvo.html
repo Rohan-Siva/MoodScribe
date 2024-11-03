@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat Log</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic reset and body styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffe1;
+            background-color: #1a1a2e;
+            overflow: hidden;
+        }
+
+        /* Chat Log Container */
+        .chat-log-container {
+            position: fixed;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            height: 80vh;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.85);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px #00ffe1, 0px 0px 60px #ff00e6;
+            color: #00ffe1;
+            overflow-y: auto;
+        }
+
+        /* Title Styling */
+        .chat-log-container h2 {
+            font-size: 20px;
+            color: #ff00e6;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0px 0px 8px #00ffe1, 0px 0px 12px #ff00e6;
+        }
+
+        /* Chat Messages Section */
+        #chatMessages {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #00ffe1;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Individual Message Styling */
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chat Log Container -->
+    <div class="chat-log-container">
+        <h2>Live Chat Log</h2>
+        <div id="chatMessages">
+            <!-- Messages will be dynamically added here -->
+            <p>Loading chat messages...</p>
+        </div>
+    </div>
+
+    <!-- Link to External JavaScript File -->
+    <script src="chatLog.js"></script>
+
+</body>
+</html>

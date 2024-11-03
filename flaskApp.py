@@ -4,23 +4,52 @@ import requests
 import json
 from uuid import uuid4
 from datetime import datetime
-from unsloth import FastLanguageModel
+#from unsloth import FastLanguageModel
 from transformers import TextStreamer
+import os
+import sys
+import threading
+import time
+import traceback
+import json
+from datetime import datetime
+import re
+# import curses
+
+import requests
+from termcolor import colored
+import argparse
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a secure secret key
-
+store_threads = []
+PREV_CURSOR = "" # Internal Use
+OLDEST_CURSOR = "" # Internal Use
+USED_CURSORS: list = list() # Internal Use
+LAST_RESPONSE = None
+MESSAGES: list = list()
+IS_WAITING = True
+MEMBERS: dict = dict()
+TOTAL_TIME = 0
+RATE: list = [0]
+LIMIT_DATE = datetime(2024,11,2,0,0,0,0)
+REQUESTS_AMMOUNT = 0
+STREAMED_MESSAGES: list = []
+TO_STREAM: list = []
+PARSER = argparse.ArgumentParser()
+ARGS = None
 # Load the AI model once when the app starts
-alpaca_prompt = """Below is an instruction that provides 10 of the most recent messages from a conversation with time stamps that provides context. Write a response that appropriately completes the request, including the current conversation mood, mood of the response, the next response to send and an engagement score.
+#alpaca_prompt = """Below is an instruction that provides 10 of the most recent messages from a conversation with time stamps that provides context. Write a response that appropriately completes the request, including the current conversation mood, mood of the response, the next response to send and an engagement score.
 
 ### Instruction:
-{}
+#{}
 
 ### Input:
-{}
+#{}
 
 ### Response:
-{}"""
+#{}
+"""
 
 max_seq_length = 2048
 dtype = None
@@ -32,9 +61,28 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     dtype=dtype,
     load_in_4bit=load_in_4bit,
 )
-FastLanguageModel.for_inference(model)  # Enable native 2x faster inference
-
+FastLanguageModel.for_inference(model)  # Enable native 2x faster inference"""
 # Helper functions
+def rate_limit():
+    global IS_WAITING
+    IS_WAITING = False
+    raise RuntimeError("You're being rate-limited")
+
+def get_request(url: str, headers: dict, cookies: dict):
+    r = requests.get(url, headers=headers, cookies=cookies)
+    global REQUESTS_AMMOUNT
+    REQUESTS_AMMOUNT += 1
+    if r.status_code != 200 and r.status_code == 429:
+        rate_limit()
+    try:
+        res = r.json()
+        global LAST_RESPONSE
+        LAST_RESPONSE = res
+        return res
+    except json.JSONDecodeError:
+        print(r.text)
+        return None
+    
 def get_session_id(username, password):
     headers = {
         "Host": "i.instagram.com",
@@ -64,35 +112,31 @@ def get_session_id(username, password):
     else:
         return None, None
 
-def get_threads(session_id):
+def get_threads(SESSIONID):
     headers = {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "cache-control": "no-cache",
-        "pragma": "no-cache",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
-        'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 105.0.0.11.118 (iPhone11,8; iOS 12_3_1; en_US; en-US; scale=2.00; 828x1792; 165586599)'
+	"accept": "*/*",
+    "accept-language": "en-US,en;q=0.9",
+    "cache-control": "no-cache",
+    "pragma": "no-cache",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-site",
+	'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 105.0.0.11.118 (iPhone11,8; iOS 12_3_1; en_US; en-US; scale=2.00; 828x1792; 165586599)'
     }
-    cookies = {"sessionid": session_id}
-    r = requests.get("https://i.instagram.com/api/v1/direct_v2/inbox/?persistentBadging=true&folder=&thread_message_limit=1&limit=200", headers=headers, cookies=cookies)
-    if r.status_code != 200:
-        return []
-    res = r.json()
-    threads = res["inbox"]["threads"]
+    r = get_request("https://i.instagram.com/api/v1/direct_v2/inbox/?persistentBadging=true&folder=&thread_message_limit=1&limit=200", headers, {"sessionid": SESSIONID})
+    threads = r["inbox"]["threads"]
     threads_list = []
+
     for thread in threads:
         if thread["is_group"]:
             name = thread.get('thread_title', 'Unnamed Group')
         else:
             users = thread.get("users", [])
-            if users:
-                name = users[0].get("full_name", "Unknown User")
-            else:
-                name = "Empty Thread"
+            name = users[0].get("full_name", "Unknown User") if users else "Empty Thread"
+        
         thread_id = thread["thread_id"]
         threads_list.append({'id': thread_id, 'name': name})
+
     return threads_list
 
 def get_messages_instagram(session_id, thread_id, cursor=""):
@@ -137,7 +181,7 @@ def process_messages(messages):
     return processed_messages[-10:]
 
 def run_inference(messages):
-    conversation = f"Conversation: {messages}"
+    """conversation = f"Conversation: {messages}"
     inputs = tokenizer(
         [alpaca_prompt.format(conversation, "", "")],
         return_tensors="pt"
@@ -148,7 +192,7 @@ def run_inference(messages):
     # Decode the generated text
     generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
     # Here you should parse `generated_text` to extract the required fields
-    # For the purpose of this example, we'll simulate the result
+    # For the purpose of this example, we'll simulate the result"""
     ai_result = {
         "suggestedMessage": "Take it one day at a time. I'm here for you.",
         "mood": "sad",
@@ -164,6 +208,7 @@ def welcome():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global store_threads
     if request.method == 'POST':
         data = request.get_json()
         username = data.get('username')
@@ -174,6 +219,8 @@ def login():
             session['sessionid'] = session_id
             session['user_id'] = user_id
             threads = get_threads(session_id)
+            print("threads are", threads)
+            store_threads = threads
             return jsonify({'success': True, 'threads': threads})
         else:
             return jsonify({'success': False})
@@ -183,10 +230,18 @@ def login():
 @app.route('/set_thread', methods=['POST'])
 def set_thread():
     data = request.get_json()
-    thread_id = data.get('thread_id')
-    if thread_id:
+    thread_name = data.get('thread_id')  # This actually contains the thread name
+    print("Thread name: ",thread_name)
+    print("Available Threads:", store_threads)
+    # Find the thread in store_threads by matching the name
+    thread = next((t for t in store_threads if t['name'] == thread_name), None)
+    
+    if thread:
+        thread_id = thread['id']  # Get the actual thread ID
         session['threadid'] = thread_id
+        print("session id",session['threadid'])
         return jsonify({'success': True})
+        
     else:
         return jsonify({'success': False})
 

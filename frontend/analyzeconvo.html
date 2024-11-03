@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Chat Log</title>
+    <title>Chat Log with Contact Name</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Basic reset and body styling */
@@ -26,58 +26,147 @@
 
         /* Chat Log Container */
         .chat-log-container {
-            position: fixed;
-            left: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 300px;
-            height: 80vh;
+            width: 70%;
+            height: 90vh;
             padding: 20px;
             background: rgba(26, 26, 46, 0.85);
             border-radius: 10px;
             box-shadow: 0px 0px 20px #00ffe1, 0px 0px 60px #ff00e6;
             color: #00ffe1;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        /* Title Styling */
-        .chat-log-container h2 {
-            font-size: 20px;
+        /* Contact Name Styling */
+        .contact-name {
+            font-size: 24px;
             color: #ff00e6;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             text-shadow: 0px 0px 8px #00ffe1, 0px 0px 12px #ff00e6;
         }
 
         /* Chat Messages Section */
         #chatMessages {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #00ffe1;
-            max-height: 100%;
+            flex-grow: 1;
             overflow-y: auto;
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        /* Individual Message Styling */
+        /* Message Container for Other Messages with Image */
+        .message-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* Emotion Image next to other messages */
+        .emotion-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        /* Text Bubble Styling */
         .message {
-            margin-bottom: 10px;
-            padding: 8px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
+            display: inline-block;
+            max-width: 75%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .message.other {
+            background-color: rgba(255, 0, 70, 0.8);
+            color: #fff;
+            border-radius: 15px 15px 15px 5px;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background-color: rgba(0, 255, 225, 0.8);
+            color: #1a1a2e;
+            border-radius: 15px 15px 5px 15px;
+            align-self: flex-end;
+        }
+
+        /* Bottom Section */
+        .bottom-section {
+            display: flex;
+            align-items: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            height: 150px;
+        }
+
+        /* Circular Mood Score */
+        .mood-score {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#ff00e6 0deg, #1a1a2e 0deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        /* Larger emotion image inside the mood score */
+        .mood-score img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        /* Locking the "Suggested Response" input box */
+        .suggested-response {
+            flex-grow: 1;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 14px;
+            color: #00ffe1;
+            border: 1px solid #00ffe1;
+            pointer-events: none; /* Locks the text box */
         }
     </style>
 </head>
 <body>
 
-    <!-- Chat Log Container -->
     <div class="chat-log-container">
-        <h2>Live Chat Log</h2>
+        <div class="contact-name" id="contactName">Contact Name</div>
         <div id="chatMessages">
-            <!-- Messages will be dynamically added here -->
-            <p>Loading chat messages...</p>
+            <!-- Sample messages for testing -->
+            <div class="message-container">
+                <img class="emotion-image" src="anxiety.gif" alt="Emotion">
+                <div class="message other">Hey! How's it going?</div>
+            </div>
+            <div class="message user">I'm doing great, thanks! How about you?</div>
+            <div class="message-container">
+                <img class="emotion-image" src="anxiety.gif" alt="Emotion">
+                <div class="message other">Pretty good! Just working on some projects. 😊</div>
+            </div>
+            <div class="message user">That sounds awesome! Let me know if you need any help.</div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="mood-score">
+                <img id="emotionImage" src="sadness.webp" alt="Progress Emotion">
+            </div>
+            <input type="text" class="suggested-response" placeholder="Suggested Response...">
         </div>
     </div>
 
+    <script src="javascript.js"></script>
 
 </body>
 </html>

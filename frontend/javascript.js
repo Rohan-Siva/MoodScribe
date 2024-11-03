@@ -73,4 +73,4 @@ function generateResponse() {
 displayMessage("Hello! This is a test message.", "User");
 displayMessage("Here's another message for the chat log.", "Other");
 updateMoodScore(60);
-updateThoughtBubble("Maybe try saying something different");
+updateThoughtBubble("Maybe try saying something differen");

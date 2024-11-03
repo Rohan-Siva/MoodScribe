@@ -5,11 +5,15 @@ import time
 import traceback
 import json
 from datetime import datetime
+import re
 # import curses
 
 import requests
 from termcolor import colored
 import argparse
+
+with open("dataFile.txt", "w") as f:
+    pass
 
 headers = {
 	"accept": "*/*",
@@ -22,7 +26,7 @@ headers = {
 	'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 105.0.0.11.118 (iPhone11,8; iOS 12_3_1; en_US; en-US; scale=2.00; 828x1792; 165586599)'
 }
 
-SESSIONID = "70389442364%3ADuPNvlkUSHfpWJ%3A10%3AAYesvuqssnXDEe9khv8_Fy7v0dij_Qh00l6ymtUzKQ"
+SESSIONID = "70389442364%3ALMIHGxLz00Y1hu%3A14%3AAYejqtLhkVF9AAprEKv0ggiTumtD_HsdNbbuhqGbCQ"
 THREADID = None
 VERBOSE = False
 FILE_PATH = "/Users/frankhou/Desktop/InstagramDMScraper-master/dataFile.txt"
@@ -435,8 +439,6 @@ def main():
         get_threads()
 
         THREADID = input("Chat's Threadid: ")
-        with open(FILE_PATH, 'a+', encoding="UTF-8") as f:
-            f.write(THREADID)
         
         choice = input("(1) Dump chat log\n(2) Stream chat\n")
         if choice == "1":
@@ -444,6 +446,8 @@ def main():
             # enable_verbose = input("Verbose (y/N): ")
             # if enable_verbose == "y":
             #     VERBOSE = True
+            
+            VERBOSE = False
 
             # enable_export = input("Export to file (y/N): ")
             # if enable_export == "y":
@@ -452,17 +456,17 @@ def main():
             #         os.remove(FILE_PATH)
 
             
-            # if VERBOSE:
-            #     print("Fetching messages...")
-            #     print("----------- Verbose -----------")
-            # waiting_thread = threading.Thread(target=waiting)
-            # waiting_thread.daemon = True
-            # try:
-            #     waiting_thread.start()
-            #     start()
-            # except Exception as e:
-            #     traceback.print_exc()
-            #     force_exit()
+            if VERBOSE:
+                print("Fetching messages...")
+                print("----------- Verbose -----------")
+            waiting_thread = threading.Thread(target=waiting)
+            waiting_thread.daemon = True
+            try:
+                waiting_thread.start()
+                start()
+            except Exception as e:
+                traceback.print_exc()
+                force_exit()
 
         else:
             try:
@@ -484,6 +488,46 @@ def main():
             print(
                 f"Fetching ended! A total of {len(MESSAGES)} messages were fetched in {hours} {'hours' if hours != 1 else 'hour'}, {minutes} {'minutes' if minutes != 1 else 'minute'}, {seconds} {'seconds' if seconds != 1 else 'second'} with {REQUESTS_AMMOUNT} requests to the API and average of {'{:.2f}'.format(compute_average_rate())} messages/second")
 
+
+
+    with open('dataFile.txt', 'r') as file:
+        input_text = file.read()
+
+        # Regex pattern to parse the text
+        pattern = r"(You|Frank): (.*?) \[(\d{2}/\d{2}/\d{4} @ \d{2}:\d{2}:\d{2})\]"
+
+        # Initialize an empty list to store messages
+        messages = []
+
+        # Process each match found in the input text
+        for match in re.finditer(pattern, input_text):
+            sender, text, timestamp_str = match.groups()
+            timestamp = datetime.strptime(timestamp_str, "%d/%m/%Y @ %H:%M:%S").isoformat() + "Z"
+            
+            # Add each message to the list in the JSON format
+            messages.append({
+                "sender": "user1" if sender == "You" else "user2",
+                "text": text,
+                "timestamp": timestamp
+            })
+
+        # Keep only the most recent 10 messages
+        messages = messages[-10:]
+
+        # Creating the JSON structure
+        json_data = {
+            "conversation_id": THREADID,
+            "messages": messages,
+        }
+
+        # Output JSON data
+        json_output = json.dumps(json_data, indent=2)
+
+        # Save the JSON output to a file
+        with open('conversation.json', 'w') as json_file:
+            json_file.write(json_output)
+
+    print("JSON output with the 10 most recent messages saved to 'conversation.json'.")
 
 if __name__ == '__main__':
     main()

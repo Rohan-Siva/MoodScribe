@@ -11,9 +11,11 @@ import re
 import requests
 from termcolor import colored
 import argparse
+# import curses
 
 with open("dataFile.txt", "w") as f:
     pass
+
 
 headers = {
 	"accept": "*/*",
@@ -26,7 +28,7 @@ headers = {
 	'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 105.0.0.11.118 (iPhone11,8; iOS 12_3_1; en_US; en-US; scale=2.00; 828x1792; 165586599)'
 }
 
-SESSIONID = "70389442364%3ALMIHGxLz00Y1hu%3A14%3AAYejqtLhkVF9AAprEKv0ggiTumtD_HsdNbbuhqGbCQ"
+SESSIONID = "70389442364%3AUlNmHq9miaBTB5%3A15%3AAYf0E7qFW4OQaaPGr1jtmTxwutlbl7hH8OQWAh7ioQ"
 THREADID = None
 VERBOSE = False
 FILE_PATH = "/Users/frankhou/Desktop/InstagramDMScraper-master/dataFile.txt"

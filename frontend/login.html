@@ -220,6 +220,36 @@
                 message.textContent = "Access Denied!";
                 message.className = "error";
             }
+
+            message.textContent = ""; // Clear previous messages
+
+    // Send credentials to Flask API
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: usernameinput,
+            password: passwordinput
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            message.textContent = "Access Granted!";
+            message.className = "success";
+            threadSuggestions.style.display = "block"; // Show thread ID suggestions
+        } else {
+            message.textContent = "Access Denied!";
+            message.className = "error";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        message.textContent = "An error occurred.";
+        message.className = "error";
+    });
         }
 
         // Function to select a thread ID

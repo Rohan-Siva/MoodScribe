@@ -13,7 +13,6 @@
 - [Inspiration](#inspiration)
 - [Features](#features)
 - [How It Works](#how-it-works)
-- [Challenges](#challenges)
 - [Accomplishments](#accomplishments)
 - [Learnings](#learnings)
 - [Future Plans](#future-plans)
@@ -58,21 +57,6 @@ MoodScribe combines modern web technologies with powerful AI to deliver a seamle
 
 - **NLP & Emotion Analysis:**  
   Utilizes advanced NLP models to assess message tone and content, providing empathetic and context-aware suggestions.
-
----
-
-## Challenges
-
-Building MoodScribe came with its set of challenges:
-
-- **API Limitations:**  
-  Navigating Meta’s API restrictions on session management and data access required innovative solutions.
-
-- **Fine-Tuning Implementation:**  
-  With limited RAM available, we employed Unsloth to optimize our training and inference processes.
-
-- **UI/UX Design:**  
-  Balancing a visually stunning interface with user-friendliness led us to adopt an "Inside Out" theme that mirrors our sentiment analysis goals.
 
 ---
 
